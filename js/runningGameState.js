@@ -3,10 +3,12 @@
     
     var missiles = [],
         blasts = [],
+        cities = [],
+        launcher = 0,
         lastMissileFired = 0;
         
     function handleClick(evt) {
-        var m = new Missile(Canvas.width*0.5, Canvas.height -10, evt.x, evt.y, MissileTypes.FRIENDLY, 1.3);
+        var m = new Missile(Canvas.width*0.5, Canvas.height - 20, evt.x, evt.y, MissileTypes.FRIENDLY, 3);
         missiles.push(m);
     }
     
@@ -20,9 +22,9 @@
     p.update = function (ts) {
         lastMissileFired++;
         
-        if (lastMissileFired > 100) {
+        if (lastMissileFired > Math.floor(Math.random() * (500 - 100 + 1)) + 100) {
             lastMissileFired = 0;
-            var m = new Missile(Math.random()*Canvas.width, 1, Math.random()*Canvas.width, Canvas.height - 10, MissileTypes.ENEMY, 0.8);
+            var m = new Missile(Math.random()*Canvas.width, 1, Math.random()*Canvas.width, Canvas.height - 20, MissileTypes.ENEMY, 0.6);
             missiles.push(m);
         }
         
@@ -66,10 +68,18 @@
                 blast.update(ts);
             }
         }
+        
     };
     
     p.render = function (ctx) {
         ctx.clearAll();
+        
+        // draw landscape
+        ctx.save();
+        ctx.fillStyle = '#00ff00';
+        ctx.fillRect(0, Canvas.height - 20, Canvas.width, 20);
+        ctx.fill();
+        ctx.restore();
         
         for (var i=0, len = missiles.length; i < len; i++) {
             missiles[i].render(ctx);

@@ -27,29 +27,29 @@
                 
         var sdx = this.destination.x - this.source.x,
             sdy = this.destination.y - this.source.y,
-            distance = Math.sqrt(sdx*sdx + sdy*sdy),
+            distance = Math.floor(Math.sqrt(sdx*sdx + sdy*sdy)),
             vx = sdx / distance,
             vy = sdy / distance;
         
         this.direction = {
             x: vx,
-            y: vy
+            y: vy,
+            dist: distance
         };
     }
         
     p.update = function(ts) {
-        var xPos = this.pos.x;
+        // work out the distance that has been travelled
+        var tx = Math.abs(this.source.x - this.pos.x),
+            ty = Math.abs(this.source.y - this.pos.y),
+            td = Math.floor(Math.sqrt(tx*tx + ty*ty));
         
-        if (this.type === types.FRIENDLY) {
-            xPos = (this.destination.x > 0) ? this.pos.x * -1 : this.pos.x;
-        }
-        
-        // reached detination point
-        if ((this.destination.x - xPos >= 0) && (this.destination.y - this.pos.y >= 0)) {
+        // reached detonation point
+        if (td >= this.direction.dist) {
             this.detonated = true;
             return;
         }
-        
+                        
         // reached edge of screen
         if ((this.pos.x < 0) || (this.pos.x > Canvas.width) || (this.pos.y < 0) || (this.pos.y > Canvas.height)) {
             this.remove = true;
@@ -61,7 +61,7 @@
     };
     
     p.render = function(ctx) {
-        var color = (this.type === types.FRIENDLY) ? '#0f0' : '#f00';
+        var color = (this.type === types.FRIENDLY) ? '#00f' : '#f00';
         
         ctx.save();
         ctx.fillStyle = color;
@@ -74,6 +74,21 @@
         ctx.stroke();
         ctx.closePath();
         
+        if (this.type == types.FRIENDLY) {
+            var crosshairSize = 6;
+            ctx.strokeStyle = '#fff';
+            ctx.beginPath();
+
+            ctx.moveTo(this.destination.x - crosshairSize, this.destination.y - crosshairSize);
+            ctx.lineTo(this.destination.x + crosshairSize, this.destination.y + crosshairSize);
+
+            ctx.moveTo(this.destination.x + crosshairSize, this.destination.y - crosshairSize);
+            ctx.lineTo(this.destination.x - crosshairSize, this.destination.y + crosshairSize);
+
+            ctx.stroke();
+            ctx.closePath();
+        }    
+            
         ctx.restore();
     };
             
