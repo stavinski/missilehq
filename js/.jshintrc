@@ -1,5 +1,6 @@
 {
     "validthis": true,
+    "loopfunc": true,
     "predef": [
         "window"
     ]

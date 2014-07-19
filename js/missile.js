@@ -4,9 +4,9 @@
     var missile = ctor,
         p = missile.prototype;   
    
-    function ctor(sourceX, sourceY, destinationX, destinationY, type) {
+    function ctor(sourceX, sourceY, destinationX, destinationY, type, speed) {
         this.width = this.height = 4;
-        this.speed = 1.4;
+        this.speed = speed;
         
         this.pos = {
             x: sourceX,
@@ -38,9 +38,14 @@
     }
         
     p.update = function(ts) {
-                
+        var xPos = this.pos.x;
+        
+        if (this.type === types.FRIENDLY) {
+            xPos = (this.destination.x > 0) ? this.pos.x * -1 : this.pos.x;
+        }
+        
         // reached detination point
-        if ((this.pos.x >= this.destination.x) && (this.pos.y <= this.destination.y)) {
+        if ((this.destination.x - xPos >= 0) && (this.destination.y - this.pos.y >= 0)) {
             this.detonated = true;
             return;
         }
@@ -67,6 +72,7 @@
         ctx.moveTo(this.source.x, this.source.y);
         ctx.lineTo(this.pos.x + this.width *0.5, this.pos.y + this.height *0.5);
         ctx.stroke();
+        ctx.closePath();
         
         ctx.restore();
     };
