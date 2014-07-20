@@ -5,7 +5,7 @@
         p = missile.prototype;   
    
     function ctor(sourceX, sourceY, destinationX, destinationY, type, speed) {
-        this.width = this.height = 4;
+        this.width = this.height = 2;
         this.speed = speed;
         
         this.pos = {
@@ -48,13 +48,7 @@
         if (td >= this.direction.dist) {
             this.detonated = true;
             return;
-        }
-                        
-        // reached edge of screen
-        if ((this.pos.x < 0) || (this.pos.x > Canvas.width) || (this.pos.y < 0) || (this.pos.y > Canvas.height)) {
-            this.remove = true;
-            return;
-        }
+        }            
         
         this.pos.x += this.direction.x * this.speed;
         this.pos.y += this.direction.y * this.speed;
@@ -64,10 +58,12 @@
         var color = (this.type === types.FRIENDLY) ? '#00f' : '#f00';
         
         ctx.save();
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+        
         ctx.fillStyle = color;
         ctx.strokeStyle = color;
-        
-        ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+                
         ctx.beginPath();
         ctx.moveTo(this.source.x, this.source.y);
         ctx.lineTo(this.pos.x + this.width *0.5, this.pos.y + this.height *0.5);

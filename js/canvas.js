@@ -10,6 +10,18 @@
             ctx.clearRect(0, 0, width, height);
         };
     }
+    
+    function mixinDrawPolygon(ctx) {
+        ctx.drawPolygon = function (p, x, y) {
+            this.beginPath();
+            this.moveTo(p[0] + x, p[1] + y);
+            for (var i = 2, len = p.length; i < len; i += 2) {
+                this.lineTo(p[i] + x, p[i + 1] + y);
+            }
+            this.fill(); 
+            this.closePath();
+        };
+    }
         
     var canvas = {
         initialize: function () {
@@ -22,6 +34,7 @@
                 ctx.height = height;
                 
                 mixinClear(ctx);
+                mixinDrawPolygon(ctx);
                 
                 return ctx;
             })(canvasElm.getContext('2d'));

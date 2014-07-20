@@ -6,7 +6,7 @@
     
     function ctor(x, y, type) {
         this.radius = 1;
-        this.maxRadius = 50;
+        this.maxRadius = (type == MissileTypes.FRIENDLY) ? 50 : 30;
         this.radIncrease = 1;
         this.pos = {
             x: x,
@@ -17,8 +17,15 @@
     }
     
     p.update = function(ts) {
-        if (this.radius >= this.maxRadius) {
+        if (this.radius <= 0) {
             this.remove = true;
+            return;
+        }
+        
+        // flip the radius so that you get the explosion withdraw look
+        if (this.radius === this.maxRadius) {
+            this.radIncrease = -1;
+            this.radius = this.maxRadius + this.radIncrease;
             return;
         }
         
@@ -27,7 +34,7 @@
     
     p.render = function(ctx) {
         ctx.save();
-        ctx.fillStyle = '#ffff00';
+        ctx.fillStyle = '#fff';
         ctx.beginPath();
         ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2*Math.PI);
         ctx.fill();
