@@ -5,6 +5,8 @@
         blasts = [],
         cities = [],
         launchers = [],
+        level = 1,
+        score = 0,
         lastMissileFired = 0;
         
     function handleClick(evt) {    
@@ -47,7 +49,7 @@
         if (lastMissileFired > Math.floor(Math.random() * (500 - 100 + 1)) + 100) {
             lastMissileFired = 0;
             var enemyTarget = launchers[Math.floor(Math.random()*3)],
-                m = new Missile(Math.random()*Canvas.width, 1, enemyTarget.pos.x, enemyTarget.pos.y - 10, MissileTypes.ENEMY, 0.6);
+                m = new Missile(Math.random()*Canvas.width, 20, enemyTarget.pos.x, enemyTarget.pos.y - 10, MissileTypes.ENEMY, 0.6);
             missiles.push(m);
         }
         
@@ -92,9 +94,21 @@
             }
         }
         
+        blasts.forEach(function (blast) {
+            if (blast.type === MissileTypes.ENEMY) {
+                launchers.forEach(function (launcher) {
+                    if (blast.intersects(launcher.pos.x, launcher.pos.y - 10)) {
+                        launcher.destroyed();
+                    }
+                });
+            }
+        });
+        
         launchers.forEach(function (launcher) { 
             launcher.update(ts); 
         });
+        
+        Display.update(ts);
     };
     
     p.render = function (ctx) {
@@ -107,6 +121,17 @@
         ctx.fill();
         ctx.restore();
         
+        // draw hud
+        ctx.save();
+        ctx.fillStyle = '#0f0';
+        ctx.fillRect(0, 0, Canvas.width, 30);
+        
+        ctx.fillStyle = '#000';
+        ctx.font = '20px bold monspace';
+        ctx.fillText(score, 10, 20);
+        
+        ctx.restore();   
+        
         launchers.forEach(function (launcher) { 
             launcher.render(ctx); 
         });
@@ -118,6 +143,7 @@
         for (var j=0, len2 = blasts.length; j < len2; j++) {
             blasts[j].render(ctx);
         }
+        
         
     };
     

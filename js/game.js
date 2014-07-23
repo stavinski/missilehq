@@ -13,8 +13,8 @@
                 case states.RUNNING:
                     currentState = new RunningGameState();
                     break;
-                case states.GAME_OVER:
-                    currentState = new GameoverGameState();
+                case states.END:
+                    currentState = new EndGameState();
                     break;
             }
                     
@@ -26,7 +26,7 @@
         initialize: function () { 
             var ctx = Canvas.initialize(640, 320);
             currentState = null;
-            nextState = states.RUNNING;
+            nextState = states.END;
                         
             Canvas.animate(function (ts) {
                 checkChangeState();
@@ -41,7 +41,7 @@
         NO_CHANGE: 0,
         START: 1,
         RUNNING: 2,
-        GAME_OVER: 3
+        END: 3
     };
     
     global.Game = game;
