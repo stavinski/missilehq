@@ -26,7 +26,7 @@
         initialize: function () { 
             var ctx = Canvas.initialize(640, 320);
             currentState = null;
-            nextState = states.END;
+            nextState = states.RUNNING;
                         
             Canvas.animate(function (ts) {
                 checkChangeState();
@@ -34,6 +34,9 @@
                 currentState.update(ts);
                 currentState.render(ctx);
             });
+        },
+        changeState: function (state) {
+            nextState = state;
         }
     };
             

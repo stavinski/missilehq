@@ -5,9 +5,11 @@
         blasts = [],
         cities = [],
         launchers = [],
-        level = 1,
+        level = 0,
         score = 0,
-        lastMissileFired = 0;
+        enemyMissiles = (level * 0.5) + 20,
+        lastMissileFired = 0,
+        launchersDestroyed = 0;
         
     function handleClick(evt) {    
         var idx = Math.floor(evt.x / (Canvas.width / 3)),
@@ -30,6 +32,18 @@
         }
     }
     
+    function resetLevel() {
+        enemyMissiles = 20;
+        level++;
+        launchersDestroyed = 0;
+        missiles = [];
+        blasts = [];
+        
+        for (var i = 0, len = launchers.length; i < len; i++) {
+            launchers[i].reset();
+        }
+    }
+    
     var ctor = function () {
         Input.registerForClickEvent(handleClick);
         
@@ -38,6 +52,8 @@
             var l = new Launcher(Canvas.width*(0.33 * idx) - 100, Canvas.height - 45);
             launchers.push(l);
         }
+        
+        resetLevel();
     };
     
     var runningState = ctor,
@@ -49,7 +65,7 @@
         if (lastMissileFired > Math.floor(Math.random() * (500 - 100 + 1)) + 100) {
             lastMissileFired = 0;
             var enemyTarget = launchers[Math.floor(Math.random()*3)],
-                m = new Missile(Math.random()*Canvas.width, 20, enemyTarget.pos.x, enemyTarget.pos.y - 10, MissileTypes.ENEMY, 0.6);
+                m = new Missile(Math.random()*Canvas.width, 30, enemyTarget.pos.x, enemyTarget.pos.y - 10, MissileTypes.ENEMY, Math.min((level * 0.1) + 0.6, 2));
             missiles.push(m);
         }
         
@@ -64,6 +80,12 @@
                     
                 // use the center of the missile as the intersect point
                 if (blast.intersects(missile.pos.x + missile.width*0.5, missile.pos.y + missile.height*0.5)) {
+                    // if its a friendly missile blasting an enemy missile increase score
+                    if ((missile.type === MissileTypes.ENEMY) && (blast.type === MissileTypes.FRIENDLY)) {
+                        score += 200;
+                        enemyMissiles--;
+                    }
+                    
                     missile.detonated = true;
                 }
             });
@@ -103,12 +125,14 @@
                 });
             }
         });
-        
+            
         launchers.forEach(function (launcher) { 
             launcher.update(ts); 
         });
         
-        Display.update(ts);
+        if (enemyMissiles === 0) {
+            resetLevel();
+        }
     };
     
     p.render = function (ctx) {
@@ -122,13 +146,13 @@
         ctx.restore();
         
         // draw hud
-        ctx.save();
         ctx.fillStyle = '#0f0';
-        ctx.fillRect(0, 0, Canvas.width, 30);
+        ctx.font = '20px monospace';
         
-        ctx.fillStyle = '#000';
-        ctx.font = '20px bold monspace';
+        ctx.fillText('left: ' + enemyMissiles, Canvas.width - 150, 20);
         ctx.fillText(score, 10, 20);
+        ctx.textBaseline = 'middle';
+        ctx.fillText('level: ' + level, Canvas.width*0.5, 20);
         
         ctx.restore();   
         

@@ -16,13 +16,18 @@
             x: x,
             y: y
         };
-        this.missilesLeft = 10;
-        this.active = true;
+        
+        this.reset();
     }
     
     p.destroyed = function() {
         this.active = false;
         this.missilesLeft = 0;
+    };
+    
+    p.reset = function() {
+        this.active = true;
+        this.missilesLeft = 10;
     };
     
     p.update = function(ts) {
