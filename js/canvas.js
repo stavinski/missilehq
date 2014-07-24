@@ -65,8 +65,6 @@
         this.currentWidth = this.currentHeight * this.RATIO;
         this.scale = this.currentWidth / this.width;
                 
-        this.ctx.width = this.width;
-        this.ctx.height = this.height;
         this.canvasElm.style.width = this.currentWidth + 'px';
         this.canvasElm.style.height = this.currentHeight + 'px';
 
@@ -75,7 +73,8 @@
             top: this.canvasElm.offsetTop
         };
         
-        global.addEventListener('resize', this.resize, false);
+        global.addEventListener('resize', this.resize.bind(this), false);
+        global.addEventListener('orientation', this.resize.bind(this), false);
     };
         
     function mixinClear(ctx) {
