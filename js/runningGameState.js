@@ -8,7 +8,7 @@
         game = null,
         level = 0,
         score = 0,
-        enemyMissiles = (level * 0.5) + 20,
+        enemyMissiles = 20,
         lastMissileFired = 0,
         launchersDestroyed = 0;
         
