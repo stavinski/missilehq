@@ -2,19 +2,20 @@
     "use strict";
     
     var currentState,
-        nextState;
+        nextState,
+        canvas = new Canvas(640, 320);
     
     function checkChangeState() {
         if (nextState !== states.NO_CHANGE) {
             switch (nextState) {
                 case states.START:
-                    currentState = new StartGameState();
+                    currentState = new StartGameState(game);
                     break;
                 case states.RUNNING:
-                    currentState = new RunningGameState();
+                    currentState = new RunningGameState(game);
                     break;
                 case states.END:
-                    currentState = new EndGameState();
+                    currentState = new EndGameState(game);
                     break;
             }
                     
@@ -23,21 +24,24 @@
     }
     
     var game = {
-        initialize: function () { 
-            var ctx = Canvas.initialize(640, 320);
+        initialize: function () {
+            canvas.initialize();
+            Input.initialize(canvas);
+            
             currentState = null;
             nextState = states.RUNNING;
                         
-            Canvas.animate(function (ts) {
+            canvas.animate(function (ts) {
                 checkChangeState();
                               
                 currentState.update(ts);
-                currentState.render(ctx);
+                currentState.render(canvas.ctx);
             });
         },
         changeState: function (state) {
             nextState = state;
-        }
+        },
+        canvas: canvas
     };
             
     var states = {

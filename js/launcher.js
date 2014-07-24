@@ -17,6 +17,8 @@
             y: y
         };
         
+        this.active = true;
+        this.missilesLeft = 0;
         this.reset();
     }
     

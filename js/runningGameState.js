@@ -5,20 +5,21 @@
         blasts = [],
         cities = [],
         launchers = [],
+        game = null,
         level = 0,
         score = 0,
         enemyMissiles = (level * 0.5) + 20,
         lastMissileFired = 0,
         launchersDestroyed = 0;
         
-    function handleClick(evt) {    
-        var idx = Math.floor(evt.x / (Canvas.width / 3)),
+    function handleClick(evt) {
+        var idx = Math.floor(evt.x / (game.canvas.width / 3)),
             launcher = launchers[idx],
             nextIdx = idx;
         
         for (var i=0; i < 3; i++) {
             if (launcher.missilesLeft > 0) {
-                var m = new Missile(launcher.pos.x, Canvas.height - 50, evt.x, evt.y, MissileTypes.FRIENDLY, 3);
+                var m = new Missile(launcher.pos.x, game.canvas.height - 50, evt.x, evt.y, MissileTypes.FRIENDLY, 3);
                 missiles.push(m);
                 launcher.missilesLeft--;
                 break;
@@ -44,12 +45,13 @@
         }
     }
     
-    var ctor = function () {
+    var ctor = function (g) {
+        game = g;
         Input.registerForClickEvent(handleClick);
         
         for (var i = 0; i < 3; i++) {
             var idx = i + 1;
-            var l = new Launcher(Canvas.width*(0.33 * idx) - 100, Canvas.height - 45);
+            var l = new Launcher(game.canvas.width*(0.33 * idx) - 100, game.canvas.height - 45);
             launchers.push(l);
         }
         
@@ -65,7 +67,7 @@
         if (lastMissileFired > Math.floor(Math.random() * (500 - 100 + 1)) + 100) {
             lastMissileFired = 0;
             var enemyTarget = launchers[Math.floor(Math.random()*3)],
-                m = new Missile(Math.random()*Canvas.width, 30, enemyTarget.pos.x, enemyTarget.pos.y - 10, MissileTypes.ENEMY, Math.min((level * 0.1) + 0.6, 2));
+                m = new Missile(Math.random()*game.canvas.width, 30, enemyTarget.pos.x, enemyTarget.pos.y - 10, MissileTypes.ENEMY, Math.min((level * 0.1) + 0.6, 2));
             missiles.push(m);
         }
         
@@ -141,7 +143,7 @@
         // draw landscape
         ctx.save();
         ctx.fillStyle = '#ffff00';
-        ctx.fillRect(0, Canvas.height - 30, Canvas.width, 30);
+        ctx.fillRect(0, game.canvas.height - 30, game.canvas.width, 30);
         ctx.fill();
         ctx.restore();
         
@@ -149,10 +151,10 @@
         ctx.fillStyle = '#0f0';
         ctx.font = '20px monospace';
         
-        ctx.fillText('left: ' + enemyMissiles, Canvas.width - 150, 20);
+        ctx.fillText('left: ' + enemyMissiles, game.canvas.width - 150, 20);
         ctx.fillText(score, 10, 20);
         ctx.textBaseline = 'middle';
-        ctx.fillText('level: ' + level, Canvas.width*0.5, 20);
+        ctx.fillText('lvl: ' + level, game.canvas.width*0.5, 20);
         
         ctx.restore();   
         
@@ -167,8 +169,6 @@
         for (var j=0, len2 = blasts.length; j < len2; j++) {
             blasts[j].render(ctx);
         }
-        
-        
     };
     
     global.RunningGameState = runningState;

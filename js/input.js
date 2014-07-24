@@ -3,18 +3,18 @@
     
     var clickEventSubjects = [];
     
-    function listenForInput(canvasElm) {
-        canvasElm.addEventListener('mousedown', function (evt) {
-            raiseClickEvent(evt);
+    function listenForInput(canvas) {
+        canvas.canvasElm.addEventListener('mousedown', function (evt) {            
+            raiseClickEvent(evt, canvas);
             evt.preventDefault();
             return false;
         });
     }
     
-    function raiseClickEvent(evt) {
+    function raiseClickEvent(evt, canvas) {
         var clickEvent = {
-            x: evt.offsetX,
-            y: evt.offsetY
+            x: (evt.pageX - canvas.offset.left) / canvas.scale,
+            y: (evt.pageY - canvas.offset.top) / canvas.scale
         };
 
         for (var i=0, len=clickEventSubjects.length; i < len; i++) {
@@ -23,8 +23,8 @@
     }
     
     var input = {
-        initialize: function (canvasElm) {
-            listenForInput(canvasElm);          
+        initialize: function (canvas) {
+            listenForInput(canvas);          
         },
         registerForClickEvent: function (cb) {
             clickEventSubjects.push(cb);
