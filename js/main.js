@@ -3,6 +3,9 @@
         
     global.addEventListener('load', function () {
         FastClick.attach(document.body);
-        Game.initialize();
+        
+        Sounds.initialize(function () {
+            Game.initialize();
+        });
     });
 }(window));

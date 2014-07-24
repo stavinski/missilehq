@@ -5,6 +5,10 @@ html, body {
     cursor: crosshair;
 }
 
+audio {
+    display: none;
+}
+
 #game {
     display: block;
     position: absolute;

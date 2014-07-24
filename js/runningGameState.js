@@ -19,6 +19,7 @@
         
         for (var i=0; i < 3; i++) {
             if (launcher.missilesLeft > 0) {
+                Sounds.playSound(SoundsFXs.MISSILE, 1);
                 var m = new Missile(launcher.pos.x, game.canvas.height - 50, evt.x, evt.y, MissileTypes.FRIENDLY, 3);
                 missiles.push(m);
                 launcher.missilesLeft--;

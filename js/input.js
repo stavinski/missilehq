@@ -8,7 +8,22 @@
             raiseClickEvent(evt, canvas);
             evt.preventDefault();
             return false;
-        });
+        }, false);
+        
+        canvas.canvasElm.addEventListener('touchstart', function (evt) {
+            raiseClickEvent(evt, canvas);
+            evt.preventDefault();       
+            return false;
+        }, false);
+        
+        canvas.canvasElm.addEventListener('touchmove', function (evt) {
+            evt.preventDefault();
+            return false;
+        }, false);
+        canvas.canvasElm.addEventListener('touchend', function (evt) {
+            evt.preventDefault();
+            return false;
+        }, false);
     }
     
     function raiseClickEvent(evt, canvas) {

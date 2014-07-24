@@ -14,7 +14,10 @@
                 case states.RUNNING:
                     currentState = new RunningGameState(game);
                     break;
-                case states.END:
+                case states.END_LEVEL:
+                    //todo: add end level game state here
+                    break;
+                case states.END_GAME:
                     currentState = new EndGameState(game);
                     break;
             }
@@ -48,7 +51,8 @@
         NO_CHANGE: 0,
         START: 1,
         RUNNING: 2,
-        END: 3
+        END_LEVEL: 3,
+        END_GAME: 3
     };
     
     global.Game = game;
